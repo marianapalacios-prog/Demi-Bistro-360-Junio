@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demi Bistro · Diagnóstico + Plan 360 Rappi</title>
+  <style>
+    :root{
+      --rappi-orange:#ff5a3d;
+      --rappi-red:#ff335f;
+      --rappi-yellow:#ffb84d;
+      --ink:#191b2a;
+      --muted:#687083;
+      --soft:#f6f7fb;
+      --card:#ffffff;
+      --line:#e7e9f1;
+      --green:#13a878;
+      --blue:#2f7de1;
+      --purple:#7057d2;
+      --amber:#d98a12;
+      --danger:#d84f45;
+      --shadow:0 16px 45px rgba(26,31,54,.08);
+      --radius:22px;
+      --radius-sm:14px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,61,.16), transparent 34rem),
+        radial-gradient(circle at top right, rgba(255,51,95,.14), transparent 32rem),
+        var(--soft);
+      color:var(--ink);
+      line-height:1.45;
+    }
+    .page{max-width:1180px;margin:0 auto;padding:30px 22px 56px}
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      padding:34px;
+      background:linear-gradient(135deg, var(--rappi-orange), var(--rappi-red));
+      color:#fff;
+      box-shadow:var(--shadow);
+    }
+    .hero:after{
+      content:"";
+      position:absolute;right:-120px;top:-160px;width:420px;height:420px;
+      border-radius:50%;background:rgba(255,255,255,.14)
+    }
+    .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.45fr .55fr;gap:24px;align-items:end}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid rgba(255,255,255,.36);border-radius:999px;background:rgba(255,255,255,.14);font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+    h1{font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:-.05em;margin-bottom:15px;max-width:760px}
+    .hero p{font-size:16px;color:rgba(255,255,255,.88);max-width:710px}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .chip{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);font-size:12px;font-weight:700;white-space:nowrap}
+    .rappi-mark{text-align:right;font-weight:900;font-size:32px;letter-spacing:-.05em;opacity:.92}
+    .rappi-mark span{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.72;margin-top:8px}
+    .nav{position:sticky;top:0;z-index:10;margin:18px 0 22px;padding:10px;background:rgba(255,255,255,.76);backdrop-filter:blur(16px);border:1px solid rgba(231,233,241,.8);border-radius:999px;display:flex;gap:8px;box-shadow:0 12px 30px rgba(26,31,54,.06);overflow:auto}
+    .nav a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:800;padding:10px 14px;border-radius:999px;white-space:nowrap;transition:.2s ease}
+    .nav a:hover{background:#fff;color:var(--rappi-red);box-shadow:0 8px 20px rgba(26,31,54,.06)}
+    .section{margin-top:26px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:14px}
+    .section-kicker{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--rappi-red);margin-bottom:4px}
+    h2{font-size:28px;letter-spacing:-.035em;line-height:1.1}
+    .section-note{color:var(--muted);font-size:13px;max-width:460px;text-align:right}
+    .grid{display:grid;gap:14px}
+    .grid-6{grid-template-columns:repeat(6,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+    .kpi{min-height:132px;position:relative;overflow:hidden}
+    .kpi:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:linear-gradient(90deg,var(--rappi-orange),var(--rappi-red))}
+    .kpi .label{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+    .kpi .value{font-size:32px;font-weight:900;letter-spacing:-.04em}
+    .kpi .delta{font-size:12px;font-weight:800;margin-top:8px;color:var(--muted)}
+    .delta.good{color:var(--green)}.delta.bad{color:var(--danger)}.delta.warn{color:var(--amber)}
+    .callout{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#fff7ed,#fff);border:1px solid #ffd9c9;border-radius:var(--radius);padding:18px 20px;color:#73372a;box-shadow:0 10px 30px rgba(255,90,61,.08)}
+    .callout strong{color:#341b16}.icon{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;flex:0 0 38px;background:rgba(255,90,61,.14);font-size:19px}
+    .card-title{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900;margin-bottom:15px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--rappi-red);box-shadow:0 0 0 5px rgba(255,51,95,.12)}
+    .dot.green{background:var(--green);box-shadow:0 0 0 5px rgba(19,168,120,.12)}.dot.blue{background:var(--blue);box-shadow:0 0 0 5px rgba(47,125,225,.12)}.dot.amber{background:var(--amber);box-shadow:0 0 0 5px rgba(217,138,18,.12)}.dot.purple{background:var(--purple);box-shadow:0 0 0 5px rgba(112,87,210,.12)}
+    .metric-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:11px 0;font-size:13px}.metric-row:last-child{border-bottom:0}.metric-name{color:var(--muted);font-weight:700}.metric-val{font-weight:900}.badge{border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}.badge.bad{background:#ffecea;color:#a4312a}.badge.good{background:#e8f8f1;color:#087257}.badge.warn{background:#fff2da;color:#895a09}.badge.neutral{background:#eff2f8;color:#566074}
+    .bar-item{margin:13px 0}.bar-top{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:800;margin-bottom:7px}.bar-top span:first-child{color:var(--muted)}.track{height:10px;background:#edf0f6;border-radius:999px;overflow:hidden}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--rappi-orange),var(--rappi-red))}.fill.green{background:var(--green)}.fill.blue{background:var(--blue)}.fill.amber{background:var(--amber)}.fill.purple{background:var(--purple)}.fill.gray{background:#aeb4c2}
+    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.phase{position:relative;padding-top:22px}.phase:before{content:"";position:absolute;top:0;left:20px;right:-34px;height:3px;background:linear-gradient(90deg,var(--rappi-orange),var(--rappi-red))}.phase:last-child:before{right:20px}.phase-num{position:absolute;top:-10px;left:0;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--rappi-orange),var(--rappi-red));color:#fff;display:grid;place-items:center;font-weight:950;box-shadow:0 12px 22px rgba(255,51,95,.24)}.phase h3{font-size:16px;margin:20px 0 5px}.phase .date{font-size:12px;font-weight:900;color:var(--rappi-red);margin-bottom:12px}.phase ul{padding-left:18px;color:var(--muted);font-size:13px}.phase li{margin:8px 0}
+    .lever{display:grid;grid-template-columns:auto 1fr auto;gap:15px;align-items:center;padding:16px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:12px}.lever-icon{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:22px;background:#fff0ed}.lever h3{font-size:16px;margin-bottom:4px}.lever p{font-size:13px;color:var(--muted)}.impact{min-width:145px;text-align:center;border:1px solid currentColor;border-radius:12px;padding:9px 10px;font-size:12px;font-weight:950;color:var(--rappi-red);background:#fff7f6}.impact.green{color:var(--green);background:#f0fbf7}.impact.blue{color:var(--blue);background:#eef6ff}.impact.amber{color:var(--amber);background:#fff8eb}.impact.purple{color:var(--purple);background:#f5f2ff}
+    .product-row{display:grid;grid-template-columns:36px 1fr auto auto;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}.product-row:last-child{border:0}.rank{width:28px;height:28px;border-radius:10px;background:linear-gradient(135deg,var(--rappi-orange),var(--rappi-red));color:#fff;display:grid;place-items:center;font-size:12px;font-weight:950}.product-name{font-size:13px;font-weight:850}.units,.trend{font-size:12px;font-weight:900}.units{color:var(--muted)}.trend.up{color:var(--green)}.trend.down{color:var(--danger)}.trend.new{color:var(--blue)}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff}table{width:100%;border-collapse:collapse;min-width:680px}th{background:linear-gradient(135deg,var(--rappi-orange),var(--rappi-red));color:#fff;text-align:left;font-size:12px;padding:13px;font-weight:900}td{padding:13px;border-bottom:1px solid var(--line);font-size:13px}tr:last-child td{border-bottom:0}td strong{font-weight:950}.target{color:var(--rappi-red);font-weight:950}
+    .svg-chart{width:100%;height:auto;display:block}.legend{display:flex;justify-content:center;gap:18px;margin-top:10px;font-size:12px;font-weight:800;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}.mini-note{font-size:12px;color:var(--muted);margin-top:12px}
+    .next-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.next-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}.next-card .week{font-size:12px;font-weight:950;color:var(--rappi-red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.next-card h3{font-size:16px;margin-bottom:8px}.next-card p{font-size:13px;color:var(--muted)}
+    .footer{margin-top:28px;border-radius:28px;background:var(--ink);color:#fff;padding:26px;display:flex;align-items:center;justify-content:space-between;gap:18px}.footer h2{color:#fff}.footer p{color:rgba(255,255,255,.72);font-size:13px;margin-top:7px}.footer .logo{font-size:26px;font-weight:950;color:var(--rappi-orange);letter-spacing:-.05em}
+    @media(max-width:980px){.hero-grid,.grid-6,.grid-4,.grid-3,.grid-2,.timeline,.next-grid{grid-template-columns:1fr 1fr}.section-note{text-align:left}.hero-grid{align-items:start}.rappi-mark{text-align:left}.phase:before{display:none}}
+    @media(max-width:640px){.page{padding:18px 14px 38px}.hero{padding:24px}.hero-grid,.grid-6,.grid-4,.grid-3,.grid-2,.timeline,.next-grid{grid-template-columns:1fr}.section-head{display:block}.lever{grid-template-columns:1fr}.impact{text-align:left}.footer{display:block}.product-row{grid-template-columns:32px 1fr auto}.trend{grid-column:2/4}.nav{border-radius:18px}}
+    @media print{body{background:#fff}.nav{display:none}.card,.hero,.footer{box-shadow:none}.page{max-width:100%;padding:0}.section{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">🍔 Plan 360 · Restaurantes</div>
+          <h1>Demi Bistro en Rappi MX</h1>
+          <p>Diagnóstico ejecutivo + plan de crecimiento 360 para corregir operación, recuperar ticket, mejorar conversión y construir recompra en los próximos 90 días.</p>
+          <div class="hero-meta">
+            <span class="chip">Brand ID 671527</span>
+            <span class="chip">Ciudad de México</span>
+            <span class="chip">Periodo: Mayo–Agosto 2026</span>
+            <span class="chip">KAM: mariana.palacios@rappi.com</span>
+          </div>
+        </div>
+        <div class="rappi-mark">rappi<span>Propuesta de crecimiento</span></div>
+      </div>
+    </section>
+
+    <nav class="nav" aria-label="Navegación del reporte">
+      <a href="#resumen">Resumen</a>
+      <a href="#operativo">Operativo</a>
+      <a href="#comercial">Comercial</a>
+      <a href="#palancas">Palancas</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#metas">Metas</a>
+      <a href="#pasos">Próximos pasos</a>
+    </nav>
+
+    <section class="section" id="resumen">
+      <div class="section-head">
+        <div><div class="section-kicker">Situación actual · Mayo 2026</div><h2>Cuenta con señales de tracción, pero con bloqueadores críticos</h2></div>
+        <p class="section-note">La marca arrancó en marzo 2026. La ventana de junio–julio es ideal para corregir antes de que el algoritmo castigue el ranking por baja disponibilidad y baja conversión.</p>
+      </div>
+      <div class="grid grid-6">
+        <div class="card kpi"><div class="label">Venta YTD</div><div class="value">$17K</div><div class="delta">Ene–May 2026</div></div>
+        <div class="card kpi"><div class="label">Órdenes YTD</div><div class="value">40</div><div class="delta">Arranque de marca</div></div>
+        <div class="card kpi"><div class="label">AOV Mayo</div><div class="value">$322</div><div class="delta bad">-52.6% vs Abril</div></div>
+        <div class="card kpi"><div class="label">Órdenes Mayo</div><div class="value">24</div><div class="delta good">+84.6% vs Abril</div></div>
+        <div class="card kpi"><div class="label">Availability</div><div class="value">84.8%</div><div class="delta bad">Obj: 98%</div></div>
+        <div class="card kpi"><div class="label">Retención</div><div class="value">0%</div><div class="delta bad">Frecuencia 1.00</div></div>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <div class="icon">💡</div>
+        <div><strong>Lectura ejecutiva:</strong> el crecimiento de órdenes MoM confirma que hay demanda inicial, pero la baja disponibilidad, el AOV en caída y la ausencia de retención limitan la escala. El foco debe ser primero operación y menú, después recompra y aceleración.</div>
+      </div>
+    </section>
+
+    <section class="section" id="operativo">
+      <div class="section-head">
+        <div><div class="section-kicker">Diagnóstico operativo</div><h2>Semáforo vs objetivos de Cuentas Nacionales</h2></div>
+        <p class="section-note">Cooking time y wait time cumplen. Availability, defect rate y tiempo total de entrega son los principales frenos.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><span class="dot"></span> Abril–Mayo vs target</div>
+          <div class="metric-row"><span class="metric-name">% Availability</span><span class="metric-val">84.8%</span><span class="badge bad">Crítico</span></div>
+          <div class="metric-row"><span class="metric-name">Defect Rate</span><span class="metric-val">4.17%</span><span class="badge bad">Crítico</span></div>
+          <div class="metric-row"><span class="metric-name">Tiempo entrega</span><span class="metric-val">43.90 min</span><span class="badge bad">Crítico</span></div>
+          <div class="metric-row"><span class="metric-name">Cooking Time</span><span class="metric-val">13.27 min</span><span class="badge good">Cumple</span></div>
+          <div class="metric-row"><span class="metric-name">Wait Time RT tienda</span><span class="metric-val">0.62 min</span><span class="badge good">Cumple</span></div>
+          <div class="metric-row"><span class="metric-name">% Cancelaciones</span><span class="metric-val">N/D</span><span class="badge warn">Sin datos</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="dot amber"></span> Availability histórica</div>
+          <div class="bar-item"><div class="bar-top"><span>Mejor semana</span><strong>96.8%</strong></div><div class="track"><div class="fill green" style="width:96.8%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Mayo actual</span><strong>84.8%</strong></div><div class="track"><div class="fill" style="width:84.8%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Peor semana</span><strong>72.4%</strong></div><div class="track"><div class="fill amber" style="width:72.4%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Objetivo</span><strong>98.0%</strong></div><div class="track"><div class="fill green" style="width:98%"></div></div></div>
+          <p class="mini-note">Prioridad: asegurar operación de 15:00 a 23:00 y activar tienda 30 minutos antes del pico de las 16:00.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="comercial">
+      <div class="section-head">
+        <div><div class="section-kicker">Análisis comercial</div><h2>Funnel bajo benchmark y oportunidad clara en menú</h2></div>
+        <p class="section-note">La conversión total está en 7.1% vs benchmark 15.1%. Mejorar fotos, naming y combos puede duplicar órdenes sin comprar más tráfico.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><span class="dot blue"></span> Funnel de conversión · Mayo</div>
+          <div class="bar-item"><div class="bar-top"><span>Impresiones / SST</span><strong>267 · 100%</strong></div><div class="track"><div class="fill blue" style="width:100%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Add to Cart</span><strong>34 · 12.7%</strong></div><div class="track"><div class="fill" style="width:42%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Proceed to Checkout</span><strong>25 · 73.5% ATC</strong></div><div class="track"><div class="fill amber" style="width:73.5%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Order Placed</span><strong>20 · 80% PTC</strong></div><div class="track"><div class="fill purple" style="width:80%"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span>Orden confirmada / OPC</span><strong>19 · 7.1%</strong></div><div class="track"><div class="fill" style="width:47%"></div></div></div>
+          <p class="mini-note">Benchmark ATC: 29.5% · Benchmark OPC: 15.1%</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="dot purple"></span> Top productos · piezas mayo</div>
+          <div class="product-row"><div class="rank">1</div><div class="product-name">Demi Burger Triple</div><div class="units">10 ud</div><div class="trend up">+150%</div></div>
+          <div class="product-row"><div class="rank">2</div><div class="product-name">Ciel Agua Natural 600ml</div><div class="units">6 ud</div><div class="trend new">Nuevo</div></div>
+          <div class="product-row"><div class="rank">2</div><div class="product-name">Demi Burger Sencilla</div><div class="units">6 ud</div><div class="trend up">+500%</div></div>
+          <div class="product-row"><div class="rank">2</div><div class="product-name">Papas a la Francesa</div><div class="units">6 ud</div><div class="trend down">-88%</div></div>
+          <div class="product-row"><div class="rank">5</div><div class="product-name">Cheese Burger Doble</div><div class="units">5 ud</div><div class="trend up">+67%</div></div>
+          <div class="product-row"><div class="rank">11</div><div class="product-name">Demi Burger Doble</div><div class="units">1 ud</div><div class="trend down">-99%</div></div>
+          <div class="callout" style="margin-top:14px;padding:14px"><div class="icon">⚠️</div><div>La Demi Burger Doble cayó de #1 con 92 unidades a #11 con 1 unidad. Revisar stockout, precio, foto y posición en menú.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="palancas">
+      <div class="section-head">
+        <div><div class="section-kicker">Plan 360</div><h2>Las 5 palancas que moverán la aguja</h2></div>
+        <p class="section-note">Ordenadas por impacto y dependencia: primero operación, después ticket, retención, conversión y experiencia de entrega.</p>
+      </div>
+      <div class="card">
+        <div class="lever"><div class="lever-icon">🔥</div><div><h3>1. Availability 84.8% → 95%+</h3><p>Corregir horarios en portal, asegurar apertura 15:00–23:00, activar tienda 30 min antes del pico de 16:00 y revisar caídas lunes/viernes.</p></div><div class="impact">+20–30% órdenes</div></div>
+        <div class="lever"><div class="lever-icon">🛒</div><div><h3>2. AOV $322 → $450+ con combos</h3><p>Recuperar visibilidad de Demi Burger Doble, crear combos con bebida incluida y activar add-ons de papas, bebida y postre.</p></div><div class="impact amber">+40% venta bruta</div></div>
+        <div class="lever"><div class="lever-icon">👥</div><div><h3>3. Retención frecuencia 1.0 → 1.5+</h3><p>Lanzar promo de recompra: 20% de descuento en segunda orden con vigencia de 15 días, más squads de Reactivación y Momentum.</p></div><div class="impact green">-50% CAC</div></div>
+        <div class="lever"><div class="lever-icon">📈</div><div><h3>4. Conversión 7.1% → 12%+</h3><p>Actualizar fotos de top 5 productos, mejorar nombres y descripciones con lenguaje más antojable y ordenar el menú por intención de compra.</p></div><div class="impact purple">+2x órdenes sin ads</div></div>
+        <div class="lever"><div class="lever-icon">⏱️</div><div><h3>5. Entrega 43.9 min → &lt;35 min</h3><p>Evaluar Turbo Restaurantes, revisar cobertura de riders en picos y validar microzona Condesa–Roma para mejorar promesa de entrega.</p></div><div class="impact blue">+ ranking</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="section-head">
+        <div><div class="section-kicker">Roadmap de ejecución</div><h2>8 semanas · Junio–Julio 2026</h2></div>
+        <p class="section-note">Plan por fases para corregir lo urgente y escalar lo que funcione con KPIs semanales.</p>
+      </div>
+      <div class="timeline">
+        <div class="card phase"><div class="phase-num">1</div><h3>Rescate operativo</h3><div class="date">Semanas 1–2 · 2–13 Jun</div><ul><li>Corregir horarios de apertura.</li><li>Asegurar operación 15:00–23:00.</li><li>Activar 30 min antes del pico.</li><li>Diagnosticar caída de Demi Burger Doble.</li></ul></div>
+        <div class="card phase"><div class="phase-num">2</div><h3>Optimización de menú</h3><div class="date">Semanas 3–4 · 16–27 Jun</div><ul><li>Actualizar fotos top 5.</li><li>Crear 2–3 combos con bebida.</li><li>Activar add-ons.</li><li>Mejorar nombres y descripciones.</li></ul></div>
+        <div class="card phase"><div class="phase-num">3</div><h3>Activación de usuarios</h3><div class="date">Semanas 5–6 · 30 Jun–11 Jul</div><ul><li>Promo recompra 20% segunda orden.</li><li>Squad Reactivación y Momentum.</li><li>Free delivery martes/jueves.</li><li>Beneficio Prime / RappiPro.</li></ul></div>
+        <div class="card phase"><div class="phase-num">4</div><h3>Escala y consolidación</h3><div class="date">Semanas 7–8 · 14–25 Jul</div><ul><li>Evaluar Turbo Restaurantes.</li><li>Validar microzona óptima.</li><li>Analizar segunda sucursal.</li><li>Review y ajuste de inversión agosto.</li></ul></div>
+      </div>
+    </section>
+
+    <section class="section" id="metas">
+      <div class="section-head">
+        <div><div class="section-kicker">Metas de negocio</div><h2>KPIs Junio–Agosto 2026</h2></div>
+        <p class="section-note">Meta a 90 días: 100 órdenes/mes, $35K de venta bruta y 18% de retención.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><span class="dot green"></span> Proyección de órdenes</div>
+          <svg class="svg-chart" viewBox="0 0 560 300" role="img" aria-label="Proyección de órdenes mayo a agosto">
+            <line x1="55" y1="245" x2="530" y2="245" stroke="#d7dbe6" stroke-width="2"/><line x1="55" y1="45" x2="55" y2="245" stroke="#d7dbe6" stroke-width="2"/>
+            <g stroke="#eef1f7" stroke-width="1"><line x1="55" y1="205" x2="530" y2="205"/><line x1="55" y1="165" x2="530" y2="165"/><line x1="55" y1="125" x2="530" y2="125"/><line x1="55" y1="85" x2="530" y2="85"/><line x1="55" y1="45" x2="530" y2="45"/></g>
+            <g fill="#8891a3" font-size="12" font-weight="700"><text x="28" y="249">0</text><text x="22" y="209">20</text><text x="22" y="169">40</text><text x="22" y="129">60</text><text x="22" y="89">80</text><text x="16" y="49">100</text></g>
+            <polyline points="80,237 195,219 310,155 425,105 515,45" fill="none" stroke="#13a878" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="80,237 195,219" fill="none" stroke="#ff5a3d" stroke-width="5" stroke-linecap="round"/>
+            <g><circle cx="80" cy="237" r="7" fill="#ff5a3d"/><circle cx="195" cy="219" r="7" fill="#ff5a3d"/><circle cx="310" cy="155" r="7" fill="#13a878"/><circle cx="425" cy="105" r="7" fill="#13a878"/><circle cx="515" cy="45" r="7" fill="#13a878"/></g>
+            <g fill="#687083" font-size="12" font-weight="800"><text x="68" y="270">Mar</text><text x="182" y="270">Abr</text><text x="298" y="270">May</text><text x="414" y="270">Jun</text><text x="505" y="270">Ago</text></g>
+          </svg>
+          <div class="legend"><span><i style="background:#ff5a3d"></i>Órdenes reales</span><span><i style="background:#13a878"></i>Objetivo</span></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Métrica</th><th>Jun</th><th>Jul</th><th>Ago</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Órdenes/mes</strong></td><td>45</td><td>70</td><td class="target">100</td></tr>
+              <tr><td><strong>Venta bruta</strong></td><td>$14K</td><td>$22K</td><td class="target">$35K</td></tr>
+              <tr><td><strong>AOV</strong></td><td>$380</td><td>$430</td><td class="target">$450</td></tr>
+              <tr><td><strong>Availability</strong></td><td>92%</td><td>95%</td><td class="target">97%</td></tr>
+              <tr><td><strong>Defect Rate</strong></td><td>&lt;3%</td><td>&lt;2%</td><td class="target">&lt;1.5%</td></tr>
+              <tr><td><strong>Retención</strong></td><td>5%</td><td>10%</td><td class="target">18%</td></tr>
+              <tr><td><strong>Conversión</strong></td><td>10%</td><td>12%</td><td class="target">13%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:14px"><div class="icon">🎯</div><div><strong>Cadencia recomendada:</strong> revisión semanal de availability, órdenes y AOV; revisión mensual del plan el primer lunes de cada mes; reporte de avance a mariana.palacios@rappi.com.</div></div>
+    </section>
+
+    <section class="section" id="pasos">
+      <div class="section-head">
+        <div><div class="section-kicker">Próximos pasos</div><h2>Agenda de acción inmediata</h2></div>
+        <p class="section-note">Convertir el diagnóstico en decisiones concretas desde esta semana.</p>
+      </div>
+      <div class="next-grid">
+        <div class="next-card"><div class="week">Esta semana</div><h3>Corregir operación</h3><p>Horarios, availability y diagnóstico de caída de Demi Burger Doble.</p></div>
+        <div class="next-card"><div class="week">Semana 2–3</div><h3>Actualizar menú</h3><p>Fotos top, combos con bebida incluida y módulo de add-ons.</p></div>
+        <div class="next-card"><div class="week">Semana 4</div><h3>Lanzar recompra</h3><p>20% de descuento para segunda orden con vigencia de 15 días.</p></div>
+        <div class="next-card"><div class="week">Mes 2–3</div><h3>Escalar</h3><p>Turbo Restaurantes, revisión de microzona y posible segunda sucursal.</p></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><h2>¡Juntos haremos que Demi Bistro sea Top en Rappi CDMX!</h2><p>Documento de trabajo para seguimiento KAM + aliado · Junio 2026</p></div>
+      <div class="logo">rappi</div>
+    </footer>
+  </main>
+</body>
+</html>
